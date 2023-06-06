@@ -1,56 +1,17 @@
-# my_list = []
+def bubble_sort(arr):
+    def swap(i, j):
+        arr[i], arr[j] = arr[j], arr[i]
 
-# def enqueue(my_list, a):
-#     return my_list.append(a)
-#
-# def dequeue(my_list):
-#     return my_list.pop()
-#
-# def isEmpty(my_list):
-#     return not bool(my_list)
-#
-# def size(my_list):
-#     return len(my_list)
-#
-# enqueue(my_list, 2)
-# enqueue(my_list, 3)
-# enqueue(my_list, 4)
-# dequeue(my_list)
-# print(size(my_list))
-# print(isEmpty(my_list))
-# print(my_list)
+    n = len(arr)
+    swapped = True
 
-my_list = []
+    x = -1
+    while swapped:
+        swapped = False
+        x = x + 1
+        for i in range(1, n - x):
+            if arr[i - 1] > arr[i]:
+                swap(i - 1, i)
+                swapped = True
 
-class Queue:
-    def __init__(self):
-        self.queue = []
-
-    def enqueue_right(self, a):
-        return self.queue.append(a)
-
-    def enqueue_left(self, a):
-        return self.queue.insert(0,a)
-
-    def dequeue_right(self):
-        return self.queue.pop(-1)
-
-    def dequeue_left(self):
-        return self.queue.pop(0)
-
-    def isEmpty(self):
-        return not bool(self.queue)
-
-    def size(self):
-        return len(self.queue)
-
-
-queue = Queue()
-queue.enqueue_right(2)
-queue.enqueue_right(6)
-queue.enqueue_right(8)
-queue.enqueue_right(9)
-queue.enqueue_left(33)
-# queue.dequeue_right()
-# queue.dequeue_left()
-print(queue.queue)
+    return arr
