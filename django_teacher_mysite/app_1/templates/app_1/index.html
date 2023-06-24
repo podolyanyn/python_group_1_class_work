@@ -1,13 +1,12 @@
-    {% if users %}
-        <ol>
-        {% for user in users %}
-            <li>{{ user }}</li>
-        {% endfor %}
-        </ol>
-    {% else %}
-        <p>No users are available.</p>
-    {% endif %}
-
-{{ notes.0 }}
+ {% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'app_1:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
 
 
+<a href = '/app_1/new_question/'>Add new question</a>
