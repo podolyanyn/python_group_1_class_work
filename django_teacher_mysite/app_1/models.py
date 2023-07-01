@@ -1,10 +1,13 @@
 from django.db import models
 import datetime
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def was_published_recently(self):
         now = timezone.now()

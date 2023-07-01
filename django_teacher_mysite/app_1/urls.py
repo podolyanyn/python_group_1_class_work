@@ -7,8 +7,8 @@ app_name = "app_1"
 urlpatterns = [
     # path('qwerty/', views.index),
     # path('qwerty_1/', views.index),
-    # path('', views.users),
-    # path('quetions', views.quetions),
+    # path('users/', views.users, name='users'),
+    path('quetions/', views.quetions, name='quetions'),
     # # ex: /polls/
     # path("", views.index, name="index"),
     # # ex: /polls/5/
@@ -18,6 +18,7 @@ urlpatterns = [
     # # ex: /polls/5/vote/
     # path("<int:question_id>/vote/", views.vote, name="vote"),
 
+    path("index_1/", views.index_1, name="index_1"),
     path("", views.IndexView.as_view(), name="index"),
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
@@ -25,3 +26,4 @@ urlpatterns = [
     path("new_question/", views.new_question, name="new_question"),
     path("new_question_thanks/", views.new_question_thanks, name="new_question_thanks"),
 ]
+

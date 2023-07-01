@@ -1,23 +1,29 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Question, Choice
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.urls import reverse
 from django.views import generic
 from .forms import QuestionForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 
 # def index(request):
 #     latest_question_list = Question.objects.order_by("-pub_date")[:5]
 #     context = {"latest_question_list": latest_question_list}
 #     return render(request, "app_1/index.html", context)
 
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "app_1/index.html"
     context_object_name = "latest_question_list"
     def get_queryset(self):
         """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        return Question.objects.filter(user=self.request.user).order_by("-pub_date")[:5]
+
+
 
 
 # def detail(request, question_id):
@@ -61,7 +67,8 @@ def vote(request, question_id):
 
 
 def index_1(request):
-    return HttpResponse("index_1")
+    # return HttpResponse("this is index_1")
+    return JsonResponse({'result_json':"this is index_1", 'test':'test1'})
 
 def users(request):
     # users_list = User.objects.all()
@@ -79,7 +86,7 @@ def quetions(request):
     context = {'keys_list': questions_list}
     return render(request, 'app_1/questions.html', context)
 
-
+@login_required
 def new_question(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -89,10 +96,12 @@ def new_question(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             q = Question(question_text=form.cleaned_data['question_text'],
-                         pub_date=form.cleaned_data['pub_date'])
+                         pub_date=form.cleaned_data['pub_date'],
+                         user=form.cleaned_data['user'])
             q.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('/app_1/new_question_thanks/')
+            return HttpResponseRedirect(reverse("app_1:new_question_thanks"))
+            # return HttpResponseRedirect('/app_1/new_question_thanks/')
             # return HttpResponse('New question is created !')
 
     # if a GET (or any other method) we'll create a blank form
