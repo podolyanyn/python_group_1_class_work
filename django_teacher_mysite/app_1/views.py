@@ -1,3 +1,5 @@
+import time
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Question, Choice
@@ -8,6 +10,8 @@ from django.views import generic
 from .forms import QuestionForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+import asyncio, httpx
+from asgiref.sync import sync_to_async
 
 
 
@@ -66,9 +70,7 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse("app_1:results", args=(question.id,)))
 
 
-def index_1(request):
-    # return HttpResponse("this is index_1")
-    return JsonResponse({'result_json':"this is index_1", 'test':'test1'})
+
 
 def users(request):
     # users_list = User.objects.all()
@@ -112,3 +114,44 @@ def new_question(request):
 
 def new_question_thanks(request):
     return HttpResponse('New question is created !')
+
+
+def index_1(request):
+    # return HttpResponse("this is index_1")
+    time.sleep(1)
+    return JsonResponse({'result_json':"this is index_1", 'test':'test1'})
+
+# ----------- async
+async def index_1_async(request):
+    # return HttpResponse("this is index_1")
+    await asyncio.sleep(1)
+    return JsonResponse({'result_json':"this is index_1", 'test':'test1'})
+
+@sync_to_async
+def index_async(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ', '.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
+
+
+async def async_index(request):
+    return HttpResponse("Hello, async Django!")
+
+
+# async def http_call_async():
+#     for num in range(1, 6):
+#         await asyncio.sleep(1)
+#         print(num)
+#     async with httpx.AsyncClient() as client:
+#         r = await client.get("https://httpbin.org/")
+#         print(r)
+
+
+async def async_view(request):
+    # loop = asyncio.get_event_loop()
+    # loop.create_task(http_call_async())
+    for num in range(1, 4):
+        await asyncio.sleep(1)
+        print(num)
+    return HttpResponse("Non-blocking HTTP request")
+

@@ -18,12 +18,24 @@ urlpatterns = [
     # # ex: /polls/5/vote/
     # path("<int:question_id>/vote/", views.vote, name="vote"),
 
-    path("index_1/", views.index_1, name="index_1"),
+
     path("", views.IndexView.as_view(), name="index"),
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
     path("<int:question_id>/vote/", views.vote, name="vote"),
     path("new_question/", views.new_question, name="new_question"),
     path("new_question_thanks/", views.new_question_thanks, name="new_question_thanks"),
+
+    path("index_1/", views.index_1, name="index_1"),
+    path("a/", views.index_async, name="index_async"),
+
+    path("a/index_1/", views.index_1_async, name="index_1_async"),
+
+        # path("a/", views.async_index, name="async_index"),
+    # path("a/", views.index_1, name="index_1"),
+
+    path("a/async/", views.async_view, name="async_async"),
+
+
 ]
 
