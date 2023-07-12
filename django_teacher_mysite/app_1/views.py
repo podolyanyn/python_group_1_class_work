@@ -14,18 +14,35 @@ import asyncio, httpx
 from asgiref.sync import sync_to_async
 
 
+@login_required
+def index(request):
+    if request.method != 'POST':
+        latest_question_list = Question.objects.order_by("-pub_date")[:5]
+        # latest_question_list = Question.objects.filter(user=request.user).order_by("-pub_date")[:5]
+        # context = {"latest_question_list": latest_question_list}
+        # return render(request, "app_1/index.html", context)
+    else:
+        # pass
+        # latest_question_list = Question.objects.filter(user=request.user).filter(question_text__contains=request.POST.get('searh_field')).order_by("-pub_date")[:5]
+        if request.POST.get('searh_field'):
+            latest_question_list = Question.objects.filter(question_text__contains=request.POST.get('searh_field')).order_by("-pub_date")[:5]
+        else:
+            # pass
+            user = User.objects.get(username=request.POST.get('users'))
+            latest_question_list = Question.objects.filter(user=user.id).order_by("-pub_date")[:5]
+    #
+    # users = [question.user.username if question.user.username else None  for question in latest_question_list]
+    users = list(set([getattr(question.user, 'username', None) for question in latest_question_list]))
+    context = {"latest_question_list": latest_question_list, 'users':users}
+    return render(request, "app_1/index.html", context)
 
-# def index(request):
-#     latest_question_list = Question.objects.order_by("-pub_date")[:5]
-#     context = {"latest_question_list": latest_question_list}
-#     return render(request, "app_1/index.html", context)
 
-class IndexView(LoginRequiredMixin, generic.ListView):
-    template_name = "app_1/index.html"
-    context_object_name = "latest_question_list"
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.filter(user=self.request.user).order_by("-pub_date")[:5]
+# class IndexView(LoginRequiredMixin, generic.ListView):
+#     template_name = "app_1/index.html"
+#     context_object_name = "latest_question_list"
+#     def get_queryset(self):
+#         """Return the last five published questions."""
+#         return Question.objects.filter(user=self.request.user).order_by("-pub_date")[:5]
 
 
 
@@ -111,6 +128,32 @@ def new_question(request):
         form = QuestionForm()
 
     return render(request, 'app_1/new_question.html', {'form': form})
+
+
+@login_required
+def edit_question(request, question_id):
+    question = Question.objects.get(id=question_id)
+    # question = get_object_or_404(Question, pk=question_id)
+    if request.method == 'POST':
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            form.save()
+            # return HttpResponseRedirect(reverse("app_1:new_question_thanks"))
+            # return HttpResponseRedirect('/app_1/new_question_thanks/')
+            return HttpResponse('Question is edited !')
+    else:
+        form = QuestionForm(instance=question)
+
+    return render(request, 'app_1/new_question.html', {'form': form})
+
+
+@login_required
+def delete_question(request, question_id):
+    # question = Question.objects.get_object_or_404(id=question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    question.delete()
+    return HttpResponse('Question is deleted !')
 
 def new_question_thanks(request):
     return HttpResponse('New question is created !')

@@ -9,8 +9,7 @@ urlpatterns = [
     # path('qwerty_1/', views.index),
     # path('users/', views.users, name='users'),
     path('quetions/', views.quetions, name='quetions'),
-    # # ex: /polls/
-    # path("", views.index, name="index"),
+
     # # ex: /polls/5/
     # path("<int:question_id>/", views.detail, name="detail"),
     # # ex: /polls/5/results/
@@ -18,15 +17,20 @@ urlpatterns = [
     # # ex: /polls/5/vote/
     # path("<int:question_id>/vote/", views.vote, name="vote"),
 
-
-    path("", views.IndexView.as_view(), name="index"),
+    # # ex: /polls/
+    path("", views.index, name="index"),
+    # path("", views.IndexView.as_view(), name="index"),
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
     path("<int:question_id>/vote/", views.vote, name="vote"),
     path("new_question/", views.new_question, name="new_question"),
     path("new_question_thanks/", views.new_question_thanks, name="new_question_thanks"),
+    path("<int:question_id>/edit/", views.edit_question, name="edit_question"),
+    path("<int:question_id>/delete/", views.delete_question, name="delete_question"),
 
     path("index_1/", views.index_1, name="index_1"),
+
+    # "a/" - async
     path("a/", views.index_async, name="index_async"),
 
     path("a/index_1/", views.index_1_async, name="index_1_async"),

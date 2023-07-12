@@ -10,3 +10,5 @@
 </fieldset>
 <input type="submit" value="Vote">
 </form>
+<a href="{% url 'app_1:edit_question' question.id %}">Edit</a>
+<a href="{% url 'app_1:delete_question' question.id %}">Delete</a>
